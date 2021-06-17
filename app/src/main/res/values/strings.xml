@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">News App</string>
+    <string name="header_text" />
+    <string name="article_image">Article Image</string>
+    <string name="news_source" />
+    <string name="back">Back</string>
+    <string name="published_at">Published at: %1$s</string>
+    <string name="logo_img">Logo image</string>
+    <string name="authBTN_text">Authenticate</string>
+</resources>
