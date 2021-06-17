@@ -7,4 +7,5 @@
     <string name="published_at">Published at: %1$s</string>
     <string name="logo_img">Logo image</string>
     <string name="authBTN_text">Authenticate</string>
+    <string name="not_available">Not Available</string>
 </resources>

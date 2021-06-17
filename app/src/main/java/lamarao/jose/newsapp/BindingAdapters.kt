@@ -37,7 +37,7 @@ fun TextView.handleDate(date : String) {
 
 @BindingAdapter("ArticleText")
 fun TextView.handleArticleText(content : String) {
-    text = removeCopyrightAndCaption(content)
+    text = if (content.isNullOrEmpty()) context.getString(R.string.not_available) else removeCopyrightAndCaption(content)
 }
 
 fun removeCopyrightAndCaption(content : String) : String {
