@@ -34,7 +34,7 @@ fun TextView.handleDate(date : String) {
     } else {
         SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
     }
-    
+
     val outputFormat = SimpleDateFormat("dd-MM-yyyy • HH:mm", Locale.getDefault())
     val isoDate = inputFormat.parse(date)
     text = context.getString(R.string.published_at, outputFormat.format(isoDate!!))
