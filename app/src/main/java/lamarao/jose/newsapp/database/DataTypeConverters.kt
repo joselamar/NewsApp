@@ -8,19 +8,19 @@ import java.lang.reflect.Type
 
 class DataTypeConverters {
 
-    val moshi: Moshi = Moshi.Builder().build()
+  val moshi: Moshi = Moshi.Builder().build()
 
-    @TypeConverter
-    fun fromArticleListToString(data: List<Article>): String {
-        val type: Type = Types.newParameterizedType(MutableList::class.java, Article::class.java)
-        val adapter: JsonAdapter<List<Article>> = moshi.adapter(type)
-        return adapter.toJson(data)
-    }
+  @TypeConverter
+  fun fromArticleListToString(data: List<Article>): String {
+    val type: Type = Types.newParameterizedType(MutableList::class.java, Article::class.java)
+    val adapter: JsonAdapter<List<Article>> = moshi.adapter(type)
+    return adapter.toJson(data)
+  }
 
-    @TypeConverter
-    fun toArticleListFromString(json: String): List<Article>? {
-        val type: Type = Types.newParameterizedType(MutableList::class.java, Article::class.java)
-        val adapter: JsonAdapter<List<Article>> = moshi.adapter(type)
-        return adapter.fromJson(json)
-    }
+  @TypeConverter
+  fun toArticleListFromString(json: String): List<Article>? {
+    val type: Type = Types.newParameterizedType(MutableList::class.java, Article::class.java)
+    val adapter: JsonAdapter<List<Article>> = moshi.adapter(type)
+    return adapter.fromJson(json)
+  }
 }

@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
-                name="article"
-                type="lamarao.jose.newsapp.database.Article" />
+            name="article"
+            type="lamarao.jose.newsapp.database.Article" />
+
         <variable
             name="clickListener"
             type="lamarao.jose.newsapp.ui.main.NewsClickListener" />
@@ -42,7 +44,6 @@
             android:justificationMode="inter_word"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/article_image" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
