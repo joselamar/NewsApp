@@ -13,7 +13,7 @@
         <action
             android:id="@+id/action_initialScreen_to_mainFragment"
             app:destination="@id/mainFragment"
-            app:popUpTo="@id/initialScreen"
+            app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -32,14 +32,10 @@
         android:name="lamarao.jose.newsapp.ui.newsDetails.NewsDetails"
         android:label="news_details_fragment"
         tools:layout="@layout/news_details_fragment" >
-        <action
-            android:id="@+id/action_newsDetails_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
+
         <argument
-            android:name="article"
-            app:argType="lamarao.jose.newsapp.database.Article" />
+            android:name="selectedArticle"
+            app:argType="lamarao.jose.newsapp.database.entities.Article" />
     </fragment>
 
 </navigation>

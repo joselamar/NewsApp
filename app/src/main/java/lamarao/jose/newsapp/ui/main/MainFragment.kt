@@ -6,49 +6,51 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.distinctUntilChanged
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import lamarao.jose.newsapp.R
 import lamarao.jose.newsapp.databinding.MainFragmentBinding
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
-  private lateinit var newsViewModelFactory: MainViewModelFactory
-  private lateinit var rvNewsAdapter: RvNewsAdapter
-
-  private lateinit var _binding: MainFragmentBinding
-  private val binding
-    get() = _binding
-
-  // initiate viewModel
-  private val viewModel: MainViewModel by lazy {
-    val application = requireNotNull(this.activity).application
-    newsViewModelFactory = MainViewModelFactory(application)
-    ViewModelProvider(this, newsViewModelFactory).get(MainViewModel::class.java)
-  }
+  private val mainViewModel: MainViewModel by viewModels()
+  private lateinit var binding: MainFragmentBinding
+  private lateinit var newsAdapter: NewsAdapter
 
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
   ): View {
-    _binding = DataBindingUtil.inflate(inflater, R.layout.main_fragment, container, false)
+    binding =
+        DataBindingUtil.inflate<MainFragmentBinding>(
+                inflater, R.layout.main_fragment, container, false)
+            .apply {
+              viewModel = mainViewModel
+              lifecycleOwner = viewLifecycleOwner
+            }
+    return binding.root
+  }
 
-    binding.lifecycleOwner = viewLifecycleOwner
-    binding.viewModel = viewModel
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
-    rvNewsAdapter =
-        RvNewsAdapter(NewsClickListener { article -> viewModel.onArticleClicked(article) })
+    newsAdapter =
+        NewsAdapter(NewsClickListener { article -> mainViewModel.onArticleClicked(article) })
 
     // Add an Observer to the variable that retrieves the articles and set it to the recycler view
-    viewModel.newsResponse.observe(
-        viewLifecycleOwner,
-        { newsResponse -> newsResponse?.apply { rvNewsAdapter.data = newsResponse.articles } })
+    mainViewModel.newsResponse.distinctUntilChanged().observe(viewLifecycleOwner) { newsResponse ->
+      newsResponse?.apply { newsAdapter.submitList(this.articles) }
+    }
 
     // initiate recycler view with gridlayout and the rv adapter.
-    binding.root.findViewById<RecyclerView>(R.id.rvNews).apply {
+    binding.rvNews.apply {
       layoutManager =
           GridLayoutManager(
               context,
@@ -56,20 +58,18 @@ class MainFragment : Fragment() {
                   R.integer
                       .grid_column_count)) // On orientation change the grid layout displays two
       // columns
-      adapter = rvNewsAdapter
+      adapter = newsAdapter
+      addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
+      addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.HORIZONTAL))
     }
 
     // Add an Observer on the state variable for Navigating when and item is clicked.
-    viewModel.navigateToNewsDetail.observe(
-        viewLifecycleOwner,
-        { article ->
-          article?.let {
-            this.findNavController()
-                .navigate(MainFragmentDirections.actionMainFragmentToNewsDetails(article))
-            viewModel.onArticleDetailNavigated()
-          }
-        })
-
-    return binding.root
+    mainViewModel.navigateToNewsDetail.observe(viewLifecycleOwner) { article ->
+      article?.let {
+        this.findNavController()
+            .navigate(MainFragmentDirections.actionMainFragmentToNewsDetails(article))
+        mainViewModel.onArticleDetailNavigated()
+      }
+    }
   }
 }

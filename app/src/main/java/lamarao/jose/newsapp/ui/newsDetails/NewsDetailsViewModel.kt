@@ -2,24 +2,20 @@ package lamarao.jose.newsapp.ui.newsDetails
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import lamarao.jose.newsapp.database.Article
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import lamarao.jose.newsapp.database.entities.Article
 
-class NewsDetailsViewModel(art: Article) : ViewModel() {
+@HiltViewModel
+class NewsDetailsViewModel @Inject constructor(savedStateHandle: SavedStateHandle) : ViewModel() {
 
-  private val _article = MutableLiveData<Article>()
-  val article: LiveData<Article>
-    get() = _article
-
-  init {
-    _article.value = art
-  }
+  val article: LiveData<Article> = savedStateHandle.getLiveData("selectedArticle")
 
   private val _navigateToMain = MutableLiveData<Boolean?>()
-  val navigateToMain: LiveData<Boolean?>
-    get() = _navigateToMain
+  val navigateToMain: LiveData<Boolean?> = _navigateToMain
 
-  /** Call this immediately after navigating to [MainFragment] */
   fun doneNavigating() {
     _navigateToMain.value = null
   }

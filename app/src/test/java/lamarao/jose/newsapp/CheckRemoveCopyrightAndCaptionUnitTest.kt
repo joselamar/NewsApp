@@ -1,5 +1,6 @@
 package lamarao.jose.newsapp
 
+import lamarao.jose.newsapp.ui.common.removeCopyrightAndCaption
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

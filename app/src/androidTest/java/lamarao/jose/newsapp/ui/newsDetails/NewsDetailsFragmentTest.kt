@@ -8,8 +8,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import lamarao.jose.newsapp.R
-import lamarao.jose.newsapp.database.Article
-import lamarao.jose.newsapp.database.Source
+import lamarao.jose.newsapp.database.entities.Article
+import lamarao.jose.newsapp.database.entities.Source
 import org.junit.Test
 import org.junit.runner.RunWith
 

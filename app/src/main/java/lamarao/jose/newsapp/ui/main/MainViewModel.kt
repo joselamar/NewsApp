@@ -1,28 +1,25 @@
 package lamarao.jose.newsapp.ui.main
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.launch
-import lamarao.jose.newsapp.database.Article
-import lamarao.jose.newsapp.database.getDatabase
+import lamarao.jose.newsapp.database.entities.Article
 import lamarao.jose.newsapp.repository.NewsRepository
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-
-  private val database = getDatabase(application)
-  private val newsRepository = NewsRepository(database)
+@HiltViewModel
+class MainViewModel @Inject constructor(private val newsRepository: NewsRepository) : ViewModel() {
 
   init {
     viewModelScope.launch { newsRepository.refreshArticles() }
   }
 
-  var newsResponse = newsRepository.newsResponse
+  val newsResponse = newsRepository.newsResponse
 
   private val _navigateToNewsDetail = MutableLiveData<Article?>()
-  val navigateToNewsDetail
-    get() = _navigateToNewsDetail
+  val navigateToNewsDetail = _navigateToNewsDetail
 
   fun onArticleClicked(article: Article) {
     _navigateToNewsDetail.value = article

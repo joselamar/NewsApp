@@ -11,7 +11,7 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import java.util.concurrent.Executor
 import lamarao.jose.newsapp.R
@@ -23,51 +23,40 @@ class InitialScreen : Fragment() {
   private lateinit var biometricPrompt: BiometricPrompt
   private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
-  private lateinit var _binding: InitialScreenFragmentBinding
-  private val binding
-    get() = _binding
-
-  private val viewModel: InitialScreenViewModel by lazy {
-    ViewModelProvider(this).get(InitialScreenViewModel::class.java)
-  }
+  private val initialScreenViewModel: InitialScreenViewModel by viewModels()
 
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
-  ): View {
-    _binding = DataBindingUtil.inflate(inflater, R.layout.initial_screen_fragment, container, false)
+  ): View =
+      DataBindingUtil.inflate<InitialScreenFragmentBinding?>(
+              inflater, R.layout.initial_screen_fragment, container, false)
+          .apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = initialScreenViewModel
+          }
+          .root
 
-    // set lifecycleowner and viewModel
-    binding.lifecycleOwner = viewLifecycleOwner
-    binding.viewModel = viewModel
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     checkBiometrics()
 
-    viewModel.showPrompt.observe(
-        viewLifecycleOwner,
-        {
-          if (it == true) {
-            biometricPrompt.authenticate(promptInfo)
-            // Reset state to make sure we only show the prompt once, even if the device
-            // has a configuration change.
-            viewModel.promptShowed()
-          }
-        })
+    initialScreenViewModel.showPrompt.observe(viewLifecycleOwner) {
+      if (it == true) {
+        biometricPrompt.authenticate(promptInfo)
+        initialScreenViewModel.promptShowed()
+      }
+    }
 
-    viewModel.navigateToMain.observe(
-        viewLifecycleOwner,
-        {
-          if (it == true) {
-            this.findNavController()
-                .navigate(InitialScreenDirections.actionInitialScreenToMainFragment())
-            // Reset state to make sure we only navigate once, even if the device
-            // has a configuration change.
-            viewModel.doneNavigating()
-          }
-        })
-
-    return binding.root
+    initialScreenViewModel.navigateToMain.observe(viewLifecycleOwner) {
+      if (it == true) {
+        this.findNavController()
+            .navigate(InitialScreenDirections.actionInitialScreenToMainFragment())
+        initialScreenViewModel.doneNavigating()
+      }
+    }
   }
 
   // verify if user has biometrics enabled and act accordingly. if user can authenticate set
@@ -77,15 +66,15 @@ class InitialScreen : Fragment() {
     when (biometricManager.canAuthenticate(BIOMETRIC_STRONG)) {
       BiometricManager.BIOMETRIC_SUCCESS -> {
         setBiometrics()
-        viewModel.showPrompt()
+        initialScreenViewModel.showPrompt()
       }
-      else -> viewModel.doneAuthentication()
+      else -> initialScreenViewModel.doneAuthentication()
     }
   }
 
   // set BiometricPrompt logic and promptInfo
   private fun setBiometrics() {
-    executor = ContextCompat.getMainExecutor(context)
+    executor = ContextCompat.getMainExecutor(requireContext())
     biometricPrompt =
         BiometricPrompt(
             this,
@@ -99,7 +88,7 @@ class InitialScreen : Fragment() {
 
               override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                viewModel.doneAuthentication()
+                initialScreenViewModel.doneAuthentication()
                 Toast.makeText(context, "Authentication succeeded!", Toast.LENGTH_SHORT).show()
               }
 

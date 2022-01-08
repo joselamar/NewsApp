@@ -1,14 +1,17 @@
 package lamarao.jose.newsapp.repository
 
 import androidx.lifecycle.LiveData
+import java.io.IOException
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import lamarao.jose.newsapp.database.NewsDatabase
-import lamarao.jose.newsapp.database.NewsResponse
-import lamarao.jose.newsapp.network.NewsAPI
+import lamarao.jose.newsapp.database.entities.NewsResponse
 import timber.log.Timber
 
-class NewsRepository(private val database: NewsDatabase) {
+class NewsRepository
+@Inject
+constructor(private val database: NewsDatabase, private val newsService: NewsService) {
 
   // get NewsResponse from db
   val newsResponse: LiveData<NewsResponse> = database.newsDAO.getNewsResponse()
@@ -17,11 +20,13 @@ class NewsRepository(private val database: NewsDatabase) {
   suspend fun refreshArticles() {
     withContext(Dispatchers.IO) {
       try {
-        val newsResponse = NewsAPI.retrofitService.getNewsAsync().await()
-        newsResponse.index = 1
-        newsResponse.articles.sortedBy { it.publishedAt } // sort the articles by date
-        database.newsDAO.insertArticles(newsResponse)
-      } catch (e: Exception) {
+        val newsResponse = newsService.getNews()
+        newsResponse.body()?.let {
+          it.index = 1
+          it.articles.sortedBy { articles -> articles.publishedAt }
+          database.newsDAO.insertArticles(it)
+        }
+      } catch (e: IOException) {
         Timber.e(e)
       }
     }

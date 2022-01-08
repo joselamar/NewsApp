@@ -1,4 +1,6 @@
-package lamarao.jose.newsapp
+@file:Suppress("unused")
+
+package lamarao.jose.newsapp.ui.common
 
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,19 +11,21 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import java.text.SimpleDateFormat
 import java.util.Locale
+import lamarao.jose.newsapp.BuildConfig
+import lamarao.jose.newsapp.R
 
 @BindingAdapter("LoadImg")
-fun bindImage(imgView: ImageView, imgUrl: String?) {
+fun ImageView.bindImage(imgUrl: String?) {
   imgUrl?.let {
     val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
-    Glide.with(imgView.context)
+    Glide.with(this.context)
         .load(imgUri)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .apply(
             RequestOptions()
                 .placeholder(R.drawable.loading_animation)
                 .error(R.drawable.ic_no_image_available))
-        .into(imgView)
+        .into(this)
   }
 }
 
@@ -36,7 +40,7 @@ fun TextView.handleDate(date: String) {
 
   val outputFormat = SimpleDateFormat("dd-MM-yyyy • HH:mm", Locale.getDefault())
   val isoDate = inputFormat.parse(date)
-  text = context.getString(R.string.published_at, outputFormat.format(isoDate!!))
+  text = isoDate?.let { context.getString(R.string.published_at, outputFormat.format(isoDate)) }
 }
 
 @BindingAdapter("ArticleText")
@@ -64,5 +68,6 @@ fun checkCondition(content: String): Boolean {
   return (content.contains("image caption", ignoreCase = true) ||
       content.contains("media caption", ignoreCase = true) ||
       content.contains("image copyright", ignoreCase = true) ||
+      content.contains("image source", ignoreCase = true) ||
       content.contains("By"))
 }

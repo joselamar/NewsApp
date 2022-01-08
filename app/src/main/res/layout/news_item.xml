@@ -6,7 +6,7 @@
 
         <variable
             name="article"
-            type="lamarao.jose.newsapp.database.Article" />
+            type="lamarao.jose.newsapp.database.entities.Article" />
 
         <variable
             name="clickListener"
@@ -17,34 +17,39 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:onClick="@{() -> clickListener.onClick(article)}">
 
-        <ImageView
-            android:id="@+id/article_image"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView_articleImageWrapper"
             android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:contentDescription="@string/article_image"
-            app:LoadImg="@{article.urlToImage}"
+            android:layout_height="210dp"
+            android:elevation="10dp"
+            app:cardCornerRadius="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/article_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/article_image"
+                app:LoadImg="@{article.urlToImage}" />
+
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/article_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+            android:justificationMode="inter_word"
+            android:text="@{article.title}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold"
-            android:text="@{article.title}"
-            android:justificationMode="inter_word"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/article_image" />
-
+            app:layout_constraintTop_toBottomOf="@id/cardView_articleImageWrapper" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

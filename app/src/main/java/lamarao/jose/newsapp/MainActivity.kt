@@ -2,8 +2,10 @@ package lamarao.jose.newsapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,6 +13,8 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.main_activity)
 
     // set Timber
-    if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
+    if (BuildConfig.DEBUG) {
+      Timber.plant(Timber.DebugTree())
+    }
   }
 }

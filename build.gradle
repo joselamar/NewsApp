@@ -8,12 +8,15 @@ buildscript {
         classpath 'com.android.tools.build:gradle:7.0.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.4.0-rc01")
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40.4'
         classpath "com.diffplug.spotless:spotless-plugin-gradle:6.1.0"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
     }
 }
 
 apply plugin: "com.diffplug.spotless"
+apply plugin: 'kotlin' // or 'kotlin-multiplatform' for multiplatform projects
+apply plugin: 'kotlinx-serialization'
 
 allprojects {
     repositories {
@@ -38,9 +41,4 @@ spotless {
         trimTrailingWhitespace()
         endWithNewline()
     }
-
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }

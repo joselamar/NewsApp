@@ -7,21 +7,18 @@ import androidx.lifecycle.ViewModel
 class InitialScreenViewModel : ViewModel() {
 
   private val _navigateToMain = MutableLiveData<Boolean?>()
-  val navigateToMain: LiveData<Boolean?>
-    get() = _navigateToMain
+  val navigateToMain: LiveData<Boolean?> = _navigateToMain
+
+  private val _showPrompt = MutableLiveData<Boolean?>()
+  val showPrompt: LiveData<Boolean?> = _showPrompt
 
   fun doneAuthentication() {
     _navigateToMain.value = true
   }
 
-  /** Call this immediately after navigating to [MainFragment] */
   fun doneNavigating() {
     _navigateToMain.value = null
   }
-
-  private val _showPrompt = MutableLiveData<Boolean?>()
-  val showPrompt: LiveData<Boolean?>
-    get() = _showPrompt
 
   fun showPrompt() {
     _showPrompt.value = true
