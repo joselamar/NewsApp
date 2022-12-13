@@ -1,11 +1,14 @@
 <resources>
-    <string name="app_name">News App</string>
-    <string name="header_text" />
-    <string name="article_image">Article Image</string>
-    <string name="news_source" />
-    <string name="back">Back</string>
+    <string name="app_name">.Headlines</string>
     <string name="published_at">Published at: %1$s</string>
-    <string name="logo_img">Logo image</string>
-    <string name="authBTN_text">Authenticate</string>
-    <string name="not_available">Not Available</string>
+    <string name="nav_bottom_settings_entry">Settings</string>
+    <string name="nav_bottom_menu_entry">Headlines</string>
+    <string name="general_error_title">Oops! Something went wrong!</string>
+    <string name="general_error_message">An error occurred while fetching the headlines.</string>
+    <string name="general_error_button_action">Try Again</string>
+    <string name="too_many_requests_error_title">Oh no! No more headlines!</string>
+    <string name="too_many_requests_error_message">The daily quota has been reached.</string>
+    <string name="tabs_general">General</string>
+    <string name="tabs_entertainment">Entertainment</string>
+    <string name="tabs_sports">Sports</string>
 </resources>

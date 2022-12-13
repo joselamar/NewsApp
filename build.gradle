@@ -1,13 +1,36 @@
 buildscript {
-    ext.kotlin_version = "1.6.10"
+    ext {
+        gradle_version = '7.2.0'
+        compose_version = "1.2.0-beta03"
+        kotlin_version = "1.6.10"
+        nav_version = "2.4.2"
+        room_version = "2.4.2"
+        safeArgs_version = "2.5.0-rc01"
+        hilt_version = "2.40.4"
+        coil_version = "2.0.0"
+        hilt_nav_compose_version = "1.0.0"
+        retrofit_version = "2.9.0"
+        interceptor_version = "4.9.2"
+        timber_version = "4.7.1"
+        coroutines_version = "1.6.1"
+        coroutine_adapter_version = "0.9.2"
+        serialization_version = "1.3.2"
+        serialization_converter_version = "0.8.0"
+        datastore_version = "1.0.0"
+        material3_version = "1.0.0-alpha13"
+        lifecycle_version = "2.4.1"
+        mockk_version = "1.13.3"
+    }
+
     repositories {
         google()
         mavenCentral()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.0-alpha03")
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$safeArgs_version"
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40.4'
         classpath "com.diffplug.spotless:spotless-plugin-gradle:6.1.0"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
@@ -15,7 +38,7 @@ buildscript {
 }
 
 apply plugin: "com.diffplug.spotless"
-apply plugin: 'kotlin' // or 'kotlin-multiplatform' for multiplatform projects
+apply plugin: 'kotlin'
 apply plugin: 'kotlinx-serialization'
 
 allprojects {
@@ -29,7 +52,6 @@ spotless {
     kotlin {
         target '**/*.kt'
         ktlint()
-        ktfmt()
         trimTrailingWhitespace()
         indentWithSpaces()
         endWithNewline()
@@ -40,5 +62,21 @@ spotless {
         indentWithSpaces()
         trimTrailingWhitespace()
         endWithNewline()
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        // Treat all Kotlin warnings as errors
+        allWarningsAsErrors = true
+
+        // Enable experimental coroutines APIs, including Flow
+        freeCompilerArgs += "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        freeCompilerArgs += "-opt-in=kotlinx.coroutines.FlowPreview"
+        freeCompilerArgs += "-opt-in=kotlin.ExperimentalSerializationApi"
+        freeCompilerArgs += "-opt-in=kotlin.ExperimentalFoundationApi"
+
+        // Set JVM target to 11
+        jvmTarget = JavaVersion.VERSION_11
     }
 }

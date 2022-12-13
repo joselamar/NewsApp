@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">.Headlines</string>
+    <string name="published_at">Publicado em: %1$s</string>
+    <string name="nav_bottom_settings_entry">Definições</string>
+    <string name="nav_bottom_menu_entry">Headlines</string>
+    <string name="general_error_title">Oops! Algo correu mal!</string>
+    <string name="general_error_message">Ocorreu um erro ao buscar as headlines.</string>
+    <string name="too_many_requests_error_title">Oh não! Não há mais headlines!</string>
+    <string name="too_many_requests_error_message">A quota diária foi atingida.</string>
+    <string name="tabs_general">Geral</string>
+    <string name="tabs_entertainment">Entertenimento</string>
+    <string name="tabs_sports">Desporto</string>
+    <string name="general_error_button_action">Tente outra vez</string>
+</resources>
