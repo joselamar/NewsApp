@@ -64,19 +64,3 @@ spotless {
         endWithNewline()
     }
 }
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    kotlinOptions {
-        // Treat all Kotlin warnings as errors
-        allWarningsAsErrors = true
-
-        // Enable experimental coroutines APIs, including Flow
-        freeCompilerArgs += "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
-        freeCompilerArgs += "-opt-in=kotlinx.coroutines.FlowPreview"
-        freeCompilerArgs += "-opt-in=kotlin.ExperimentalSerializationApi"
-        freeCompilerArgs += "-opt-in=kotlin.ExperimentalFoundationApi"
-
-        // Set JVM target to 11
-        jvmTarget = JavaVersion.VERSION_11
-    }
-}

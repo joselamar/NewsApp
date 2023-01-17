@@ -1,5 +1,11 @@
 package lamarao.jose.newsapp.usecases
 
+import java.net.ConnectException
+import java.net.UnknownHostException
+import java.time.Duration
+import java.time.Instant
+import java.util.Locale
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
@@ -8,12 +14,6 @@ import lamarao.jose.newsapp.database.dao.NewsDao
 import lamarao.jose.newsapp.entities.NewsResponse
 import lamarao.jose.newsapp.system.network.api.NewsServiceApi
 import timber.log.Timber
-import java.net.ConnectException
-import java.net.UnknownHostException
-import java.time.Duration
-import java.time.Instant
-import java.util.Locale
-import javax.inject.Inject
 
 class NewsUseCase @Inject constructor(
     private val newsDao: NewsDao,
@@ -40,14 +40,14 @@ class NewsUseCase @Inject constructor(
                         newsDao.insertArticles(it.copy(newsType = newsType))
                     }
                 } else {
-                    emit(ResultWrapper.Error(result.code()))
+                    emit(ResultWrapper.Error(code = result.code()))
                 }
             } catch (e: UnknownHostException) {
-                Timber.w("Error fetching news : ${e.stackTrace}")
-                emit(ResultWrapper.Error(DEFAULT_ERROR_CODE))
+                Timber.w("Error fetching news: ${e.stackTrace}")
+                emit(ResultWrapper.Error(code = DEFAULT_ERROR_CODE))
             } catch (e: ConnectException) {
-                Timber.w("Error fetching news : ${e.stackTrace}")
-                emit(ResultWrapper.Error(DEFAULT_ERROR_CODE))
+                Timber.w("Error fetching news: ${e.stackTrace}")
+                emit(ResultWrapper.Error(code = DEFAULT_ERROR_CODE))
             }
         } else {
             emit(ResultWrapper.Success(articles))
@@ -66,7 +66,7 @@ class NewsUseCase @Inject constructor(
         return if (countryIsoCode in listOfAvailableCountries) {
             countryIsoCode
         } else {
-            "us"
+            "US"
         }
     }
 

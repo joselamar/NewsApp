@@ -12,19 +12,28 @@ def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 android {
-    compileSdkVersion 32
+    signingConfigs {
+        release {
+            storeFile file(localProperties['filePath'])
+            storePassword localProperties['storePassword']
+            keyAlias localProperties['keyAlias']
+            keyPassword localProperties['keyPassword']
+        }
+    }
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "jose.newsapp"
         minSdkVersion 26
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
@@ -41,7 +50,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "API_KEY", localProperties['apiKey']
-            buildConfigField "String", "BASE_URL", '"https://newsapi.org/v2/top-headlines/"'
+            buildConfigField "String", "BASE_URL", '"https://newsapi.org/"'
         }
     }
 
@@ -53,9 +62,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
-        freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
+        freeCompilerArgs +=  [
+                "-Xopt-in=kotlin.RequiresOptIn",
+                "-Xopt-in=kotlin.OptIn",
+                "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-Xopt-in=kotlinx.coroutines.FlowPreview",
+                "-Xopt-in=kotlin.ExperimentalSerializationApi",
+                "-Xopt-in=kotlin.ExperimentalFoundationApi"
+        ]
     }
 
     testOptions {
@@ -117,7 +134,6 @@ dependencies {
 
     // Jetpack Datastore
     implementation "androidx.datastore:datastore-preferences:$datastore_version"
-
 
     //testing
     testImplementation 'junit:junit:4.13.2'
